@@ -34,7 +34,7 @@ const Horizontal = () => {
 };
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  const { cartTotalQty } = useCart();
+  const { handleAddProductToCart, cartProducts } = useCart();
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
@@ -42,10 +42,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     category: product.category,
     brand: product.brand,
     selectedImg: { ...product.images[0] },
-    quantity: 1,
+    quantity: 0,
     price: product.price,
   });
-  console.log(cartTotalQty);
+  // console.log(cartProducts);
 
   const productRatings =
     product.reviews.reduce((acc: number, item: any) => item.rating + acc, 0) /
@@ -62,15 +62,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleQtyIncrease = useCallback(() => {
     setCartProduct((prev) => {
-      return { ...prev, quantity: ++prev.quantity };
+      return { ...prev, quantity: prev.quantity + 1 };
     });
   }, [cartProduct]);
   const handleQtyDecrease = useCallback(() => {
-    if (cartProduct.quantity === 0) {
+    if (cartProduct.quantity === 1) {
       return;
     }
     setCartProduct((prev) => {
-      return { ...prev, quantity: --prev.quantity };
+      return { ...prev, quantity: prev.quantity - 1 };
     });
   }, [cartProduct]);
 
@@ -115,7 +115,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         />
         <Horizontal />
         <div className="max-w-[300px]">
-          <Button label="Add to cart" onClick={() => {}} />
+          <Button
+            label="Add to cart"
+            onClick={() => handleAddProductToCart(cartProduct)}
+          />
         </div>
       </div>
     </div>
