@@ -54,6 +54,15 @@ const RegisterForm = () => {
         required
         type="password"
       />
+      <Input
+        id="confirmpassword"
+        label="Password"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+        type="password"
+      />
       <Button
         label={isLoading ? "Loading" : "Sign Up"}
         onClick={handleSubmit(onSubmit)}
