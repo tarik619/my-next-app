@@ -36,6 +36,14 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  hashedPassword String?
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  role Role @default(USER)
   accounts      Account[]
 }
 
+enum Role{
+    USER 
+    ADMIN
+}
