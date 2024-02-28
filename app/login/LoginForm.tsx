@@ -65,7 +65,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
     <>
       <Heading title="Sign in to E-Shop" />
       <Button
-        onClick={() => {}}
+        onClick={() => {
+          signIn("google");
+        }}
         outline
         icon={AiOutlineGoogle}
         label="Continue with google"
