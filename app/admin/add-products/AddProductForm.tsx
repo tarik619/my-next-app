@@ -1,16 +1,34 @@
 "use client";
 
+import Button from "@/app/components/Button";
 import CategoryInput from "@/app/components/inputs/CategoryInput";
 import CustomCheckBox from "@/app/components/inputs/CustomCheckbox";
 import Input from "@/app/components/inputs/Input";
+import SelectColor from "@/app/components/inputs/SelectColor";
 import TextArea from "@/app/components/inputs/TextArea";
 import Heading from "@/app/components/products/Heading";
+
 import { categories } from "@/app/utils/Categories";
-import { useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { colors } from "@/app/utils/Colors";
+import { useCallback, useEffect, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+
+export type ImageType = {
+  color: string;
+  colorCode: string;
+  image: File | null;
+};
+
+export type UploadedImageType = {
+  color: string;
+  colorCode: string;
+  image: string;
+};
 
 const AddProductForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [images, setImages] = useState<ImageType[] | null>();
+  const [isProductCreated, setIsProductCreated] = useState(false);
 
   const {
     register,
@@ -31,6 +49,20 @@ const AddProductForm = () => {
     },
   });
 
+  useEffect(() => {
+    setCustomValue("images", images);
+  }, [images]);
+
+  useEffect(() => {
+    if (isProductCreated) {
+      reset();
+      setImages(null);
+      setIsProductCreated(false);
+    }
+  }, [isProductCreated]);
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {};
+
   const category = watch("category");
 
   const setCustomValue = (id: string, value: any) => {
@@ -40,6 +72,27 @@ const AddProductForm = () => {
       shouldTouch: true,
     });
   };
+
+  const addImageToState = useCallback((value: ImageType) => {
+    setImages((prev) => {
+      if (!prev) {
+        return [value];
+      }
+
+      return [...prev, value];
+    });
+  }, []);
+  const removeImageFromState = useCallback((value: ImageType) => {
+    setImages((prev) => {
+      if (prev) {
+        const filteredImages = prev.filter(
+          (item) => item.color !== value.color
+        );
+        return filteredImages;
+      }
+      return prev;
+    });
+  }, []);
 
   return (
     <>
@@ -102,6 +155,34 @@ const AddProductForm = () => {
           })}
         </div>
       </div>
+      <div className="w-full flex flex-col flex-wrap gap-4 ">
+        <div className="">
+          <div className="font-bold">
+            Select the available product color and upload their image
+          </div>
+          <div className="">
+            You must upload an image for each of the color selected otherwise
+            your color selection will be ignored.
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {colors.map((item, index) => {
+            return (
+              <SelectColor
+                addImageToState={addImageToState}
+                removeImageFromState={removeImageFromState}
+                isProductCreated={isProductCreated}
+                key={index}
+                item={item}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <Button
+        label={isLoading ? "Loading..." : "Add Product"}
+        onClick={handleSubmit(onSubmit)}
+      />
     </>
   );
 };
