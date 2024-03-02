@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     data: {
       name,
       description,
-      price,
+      price: parseFloat(price),
       brand,
       category,
       inStock,
