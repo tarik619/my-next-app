@@ -2,7 +2,6 @@
 
 import Avatar from "@/app/components/products/Avatar";
 import Heading from "@/app/components/products/Heading";
-import { product } from "@/app/utils/product";
 import { Rating } from "@mui/material";
 import moment from "moment";
 
@@ -10,7 +9,7 @@ interface ListRatingProps {
   product: any;
 }
 
-const ListRating: React.FC<ListRatingProps> = () => {
+const ListRating: React.FC<ListRatingProps> = ({ product }) => {
   return (
     <div className="">
       <Heading title={"Product_Review"} />
