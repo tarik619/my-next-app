@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.error();
   }
 
   const body = await request.json();
@@ -64,10 +64,7 @@ export async function POST(request: Request) {
       ]);
 
       if (!existing_order) {
-        return NextResponse.json(
-          { error: "Invalid payment intent" },
-          { status: 400 }
-        );
+        return NextResponse.error();
       }
 
       return NextResponse.json({ paymentIntent: updated_intent });
@@ -85,4 +82,6 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ paymentIntent });
   }
+
+  return NextResponse.error();
 }
